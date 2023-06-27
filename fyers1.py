@@ -19,8 +19,7 @@ session = accessToken.SessionModel(client_id, secret_key)
 
 
 def generate_auth_code():
-    session = accessToken.SessionModel(client_id, secret_key)
-    response = session.generate_authcode()
+    response = session.generate_auth_url(redirect_uri)
     driver = webdriver.Chrome()
     driver.get(response)
     driver.find_element(By.XPATH, '//*[@id="login_client_id"]').click()

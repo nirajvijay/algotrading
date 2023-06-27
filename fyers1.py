@@ -15,11 +15,11 @@ pin2 = '7'
 pin3 = '2'
 pin4 = '7'
 
-session = accessToken.SessionModel(client_id, secret_key, redirect_uri)
+session = accessToken.SessionModel(client_id, secret_key)
 
 
 def generate_auth_code():
-    session = accessToken.SessionModel(client_id, secret_key, redirect_uri)
+    session = accessToken.SessionModel(client_id, secret_key)
     response = session.generate_authcode()
     driver = webdriver.Chrome()
     driver.get(response)

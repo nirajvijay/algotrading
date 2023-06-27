@@ -1,9 +1,13 @@
+from django.shortcuts import render
+from django.http import HttpResponse
 from fyers_api import fyersModel
 from fyers_api import accessToken
 from selenium.webdriver.common.by import By
 import pyotp
 from selenium import webdriver
 import time
+
+
 
 def generate_auth_code():
     client_id = 'C3HL2IWT0X-100'

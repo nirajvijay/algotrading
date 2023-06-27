@@ -1,13 +1,9 @@
-from django.shortcuts import render
-from django.http import HttpResponse
 from fyers_api import fyersModel
 from fyers_api import accessToken
 from selenium.webdriver.common.by import By
 import pyotp
 from selenium import webdriver
 import time
-
-
 
 def generate_auth_code():
     client_id = 'C3HL2IWT0X-100'
@@ -19,17 +15,11 @@ def generate_auth_code():
     pin3 = '2'
     pin4 = '7'
 
-    session = accessToken.SessionModel(
-        client_id=client_id,
-        secret_key=secret_key,
-        redirect_uri=redirect_uri,
-        response_type='code',
-        grant_type='authorization_code'
-    )
+    session = fyersModel.FyersModel(client_id=client_id, secret_key=secret_key)
+    auth_url = session.generate_auth_url(redirect_uri=redirect_uri)
 
-    response = session.generate_authcode()
     driver = webdriver.Chrome()
-    driver.get(response)
+    driver.get(auth_url)
     driver.find_element(By.XPATH, '//*[@id="login_client_id"]').click()
     driver.find_element(By.XPATH, '//*[@id="fy_client_id"]').send_keys(username)
     driver.find_element(By.XPATH, '//*[@id="clientIdSubmit"]').click()
@@ -62,15 +52,9 @@ def generate_auth_code():
 def index(request):
     if request.method == 'POST':
         auth_code = generate_auth_code()
-        session = accessToken.SessionModel(
-            client_id='C3HL2IWT0X-100',
-            secret_key='PHA683XHJN',
-            redirect_uri='https://www.google.com/',
-            response_type='code',
-            grant_type='authorization_code'
-        )
+        session = fyersModel.FyersModel(client_id='C3HL2IWT0X-100', secret_key='PHA683XHJN')
         session.set_token(auth_code)
-        response = session.generate_token()
+        response = session.generate_token(redirect_uri='https://www.google.com/')
         access_token = response['access_token']
 
         with open('access.txt', 'w') as f:
